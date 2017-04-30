@@ -31,7 +31,8 @@ module PhoneWords
           nil
         else
           words(residual.join).each do |w|
-            results.push [word, w]
+            residual_results = w.is_a?(Array) ? w.flatten : [ w ]
+            results.push [ word ] + residual_results
           end
         end
       end.compact
