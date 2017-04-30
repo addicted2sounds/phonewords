@@ -18,16 +18,37 @@ module PhoneWords
     end
 
     def words(phone)
-      @numbers = phone.to_s.chars
+      numbers = phone.to_s.chars
       letters = phone.to_s.chars.map { |num| NUMBER_LETTERS[num] }
-      combinations = NUMBER_LETTERS[@numbers.first]
+      combinations = NUMBER_LETTERS[numbers.first]
                        .product(*letters[1, MIN_LENGTH - 1])
-      combinations.map do |combination|
-        words_starting_with combination.join.upcase
-      end
+      starting_words(combinations, numbers).map do |word|
+        residual = numbers[word.length..-1]
+        if residual.empty?
+          [ word ]
+        elsif residual.length < MIN_LENGTH
+          nil
+        else
+          [ word ] + words(residual)
+        end
+      end.compact
     end
 
     private
+
+    def starting_words(combinations, numbers)
+      combinations.map do |combination|
+        words_starting_with(combination.join.upcase).select do |word|
+          numbers.join.start_with? word_to_numbers(word)
+        end
+      end.select { |e| e.is_a?(Array) && e.any? }.flatten
+    end
+
+    def word_to_numbers(word)
+      word.downcase.chars.map do |char|
+        NUMBER_LETTERS.find { |k,v| v.include? char }.first[0]
+      end.join
+    end
 
     def words_starting_with(str)
       @words.select do |word|
