@@ -22,16 +22,20 @@ module PhoneWords
       letters = phone.to_s.chars.map { |num| NUMBER_LETTERS[num] }
       combinations = NUMBER_LETTERS[numbers.first]
                        .product(*letters[1, MIN_LENGTH - 1])
+      results = []
       starting_words(combinations, numbers).map do |word|
         residual = numbers[word.length..-1]
         if residual.empty?
-          [ word ]
+          results.push word
         elsif residual.length < MIN_LENGTH
           nil
         else
-          [ word ] + words(residual)
+          words(residual.join).each do |w|
+            results.push [word, w]
+          end
         end
       end.compact
+      results
     end
 
     private
