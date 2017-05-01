@@ -1,7 +1,9 @@
+require 'redis'
+require 'byebug'
+
 require 'phonewords/finder'
 require 'phonewords/redis_builder'
 require 'phonewords/version'
-require 'byebug'
 
 module PhoneWords
   def self.find_words(phone)
@@ -10,6 +12,6 @@ module PhoneWords
   end
 
   def self.setup
-    RedisBuilder.new.seed_dictionary
+    RedisBuilder.new(Redis.new).seed_dictionary
   end
 end
