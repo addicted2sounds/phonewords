@@ -1,25 +1,22 @@
 require 'spec_helper'
 
 describe PhoneWords::Finder do
+  let(:finder) { described_class.new }
   describe '.words' do
     let(:phone) { 22587825 }
-    let(:finder) { described_class.new }
     subject { finder.words(phone) }
 
     it { is_expected.to be_a Array }
     it 'includes test combination' do
-      p subject
       is_expected.to include %w(AAL USUAL)
     end
     context 'when one word only' do
       let(:phone) { 66867 }
-      it { is_expected.to eq [%w(MOTOR), %w(NOUNS)]  }
+      it { is_expected.to eq %w(MOTOR NOUNS)  }
     end
     context 'when full phone number' do
       let(:phone) { 6686787825 }
-      it 'test' do
-        p subject
-      end
+      it { is_expected.to include %w(MOTOR TRUCK)}
     end
   end
   describe '.word_to_numbers' do
