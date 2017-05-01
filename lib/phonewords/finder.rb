@@ -19,6 +19,7 @@ module PhoneWords
 
     def words(phone)
       numbers = phone.to_s.chars
+      validate_phone numbers
       letters = phone.to_s.chars.map { |num| NUMBER_LETTERS[num] }
       combinations = NUMBER_LETTERS[numbers.first]
                        .product(*letters[1, MIN_LENGTH - 1])
@@ -44,6 +45,11 @@ module PhoneWords
     end
 
     private
+
+    def validate_phone(numbers)
+      return true if numbers.all? { |num| (2..9).include? num.to_i }
+      raise 'Phone number should include only numbers from 2 to 9'
+    end
 
     def starting_words(combinations, numbers)
       combinations.map do |combination|
