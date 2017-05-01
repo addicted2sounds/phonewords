@@ -14,4 +14,8 @@ module PhoneWords
   def self.setup
     RedisBuilder.new(Redis.new).seed_dictionary
   end
+
+  def self.redis
+    Redis.new
+  end
 end
