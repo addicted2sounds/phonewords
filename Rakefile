@@ -6,6 +6,12 @@ RSpec::Core::RakeTask.new(:spec)
 
 task :default => :spec
 
-task :setup do
-  PhoneWords.setup
+namespace :phonewords do
+  task :setup do
+    PhoneWords.setup
+  end
+
+  task :find, [ :phone ] do |t, args|
+    p PhoneWords.find_words args[:phone]
+  end
 end
