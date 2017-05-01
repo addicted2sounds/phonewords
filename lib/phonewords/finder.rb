@@ -39,6 +39,10 @@ module PhoneWords
       results
     end
 
+    def redis
+      @redis ||= PhoneWords.redis
+    end
+
     private
 
     def starting_words(combinations, numbers)
@@ -50,15 +54,11 @@ module PhoneWords
     end
 
     def word_to_numbers(word)
-      word.downcase.chars.map do |char|
-        NUMBER_LETTERS.find { |k,v| v.include? char }.first[0]
-      end.join
+      redis.hget 'word_nums', word.upcase
     end
 
     def words_starting_with(str)
-      @words.select do |word|
-        word.start_with? str
-      end
+      redis.smembers "words:#{str}"
     end
   end
 end

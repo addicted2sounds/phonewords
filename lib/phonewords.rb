@@ -1,11 +1,21 @@
-require 'phonewords/finder'
-require 'phonewords/version'
+require 'redis'
 require 'byebug'
 
-module PhoneWords
+require 'phonewords/finder'
+require 'phonewords/redis_builder'
+require 'phonewords/version'
 
-  def find_words(phone)
+module PhoneWords
+  def self.find_words(phone)
     finder = Finder.new
     finder.words phone
+  end
+
+  def self.setup
+    RedisBuilder.new(Redis.new).seed_dictionary
+  end
+
+  def self.redis
+    Redis.new
   end
 end
